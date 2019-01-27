@@ -1,0 +1,30 @@
+format_version: 2
+environments:
+  ci:
+    pipelines:
+      - "team1API"
+      
+pipelines:
+  "team1API":
+    group: team1
+    materials:
+      ui:
+        git: "git@github.com:Manikandan-K/team1-api.git"
+    stages:
+      - buildAndTest:
+          jobs:
+            test:
+              resources:
+                - node-and-java
+              tasks:
+                - script: |
+                    buildAndDeploy/build/build.sh team1
+
+      - deploy:
+           jobs:
+            deploy:
+              resources:
+                - node-and-java
+              tasks:
+                - script: |
+                    buildAndDeploy/deploy/deploy.sh team1 sethu-origin-key-pair

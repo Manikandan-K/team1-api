@@ -1,0 +1,11 @@
+#Database Configuration
+spring:
+  profiles: test
+
+  datasource:
+    url: jdbc:h2:mem:db
+    driver-class-name: org.h2.Driver
+    username: spiuser
+    password: spiuser
+
+
