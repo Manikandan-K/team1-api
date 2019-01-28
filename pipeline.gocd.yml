@@ -18,7 +18,7 @@ pipelines:
                 - node-and-java
               tasks:
                 - script: |
-                    buildAndDeploy/build/build.sh team1
+                    buildAndDeploy/build/build.sh team11
 
       - deploy:
            jobs:
@@ -27,4 +27,4 @@ pipelines:
                 - node-and-java
               tasks:
                 - script: |
-                    buildAndDeploy/deploy/deploy.sh team1 bootcamp-jan-19
+                    buildAndDeploy/deploy/deploy.sh team11 bootcamp-jan-19
