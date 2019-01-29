@@ -18,6 +18,7 @@ public class MovieRepository {
     public List<Movie> getNowShowingMovies() {
         return dsl.select()
                 .from(DSL.table("MOVIE"))
+                .orderBy(DSL.field("MOVIE.NAME"))
                 .fetchInto(Movie.class);
     }
 
