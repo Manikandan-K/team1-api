@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 import spicinemas.api.db.MovieRepository;
 import spicinemas.api.model.Movie;
+import spicinemas.api.type.MovieListingType;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
@@ -30,13 +31,19 @@ public class MovieControllerTest {
     @Test
     public void shouldCallGetNowShowingMovies() {
         mc.getNowShowingMovies();
-        verify(repoMock,times(1)).getNowShowingMovies();
+        verify(repoMock,times(1)).getMoviesFilteredOnListingType(any(MovieListingType.class));
     }
 
     @Test
     public void shouldCalladdMovie() {
         mc.init();
         verify(repoMock,times(1)).addMovie(any(Movie.class));
+    }
+
+    @Test
+    public void shouldCallUpcomingMovies() {
+        mc.getMoviesFilteredOnListingType();
+        verify(repoMock,times(1)).getMoviesFilteredOnListingType(any(MovieListingType.class));
     }
 
     @After

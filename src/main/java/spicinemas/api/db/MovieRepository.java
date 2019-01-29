@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import spicinemas.api.model.Movie;
+import spicinemas.api.type.MovieListingType;
 
 import java.util.List;
 
@@ -37,4 +38,11 @@ public class MovieRepository {
                 .into(Movie.class);
     }
 
+    public List<Movie> getMoviesFilteredOnListingType(MovieListingType listingType) {
+                return dsl.select()
+                .from(DSL.table("MOVIE"))
+                .where(DSL.field("LISTING_TYPE").eq(listingType.toString()))
+                .fetchInto(Movie.class);
+
+    }
 }
