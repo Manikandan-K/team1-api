@@ -16,13 +16,6 @@ public class MovieRepository {
     @Autowired
     private DSLContext dsl;
 
-    public List<Movie> getNowShowingMovies() {
-        return dsl.select()
-                .from(DSL.table("MOVIE"))
-                .orderBy(DSL.field("MOVIE.NAME"))
-                .fetchInto(Movie.class);
-    }
-
     public void addMovie(Movie movie) {
         dsl.insertInto(DSL.table("MOVIE"), DSL.field("NAME"), DSL.field("EXPERIENCES"), DSL.field("LISTING_TYPE"))
                 .values(movie.getName(), movie.getExperiences(), movie.getListingType().toString())
@@ -39,9 +32,10 @@ public class MovieRepository {
     }
 
     public List<Movie> getMoviesFilteredOnListingType(MovieListingType listingType) {
-                return dsl.select()
+        return dsl.select()
                 .from(DSL.table("MOVIE"))
                 .where(DSL.field("LISTING_TYPE").eq(listingType.toString()))
+                .orderBy(DSL.field("MOVIE.NAME"))
                 .fetchInto(Movie.class);
 
     }
