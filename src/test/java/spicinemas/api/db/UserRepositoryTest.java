@@ -24,12 +24,24 @@ public class UserRepositoryTest {
 
     @Before
     public void init() {
-        user = new Users("Alice","alice@example.com", "password");
+        user = new Users("Alice", "alice@example.com", "password");
     }
 
     @Test
     public void createUserTest() {
-       Users createdUser = userRepository.createUser(user);
-      Assert.assertEquals("Alice", createdUser.getName());
+        Users createdUser = userRepository.createUser(user);
+        Assert.assertEquals("Alice", createdUser.getName());
     }
+
+    @Test
+    public void getUserByEmailShouldReturnMeUserObject() {
+        Users user = userRepository.getUserByEmail("alice@example.com");
+        Assert.assertNotNull(user);
+    }
+
+    @Test(expected = Exception.class)
+    public void getUserByEmailShouldThrowExceptionWhenEmailNotFound() {
+        Users user = userRepository.getUserByEmail("fdakjfadjfk@kgadjkf.com");
+    }
+
 }

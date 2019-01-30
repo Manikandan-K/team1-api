@@ -42,4 +42,7 @@ dependencies {
 	compile('org.flywaydb:flyway-core:4.0.3')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile ('com.h2database:h2:1.4.197')
+	compile 'io.jsonwebtoken:jjwt-api:0.10.5'
+	runtime 'io.jsonwebtoken:jjwt-impl:0.10.5',
+			'io.jsonwebtoken:jjwt-jackson:0.10.5'
 }

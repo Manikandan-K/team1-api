@@ -16,12 +16,22 @@ public class UserRepository {
     private DSLContext dsl;
 
 
+    //TODO: Breaking command query pattern. Consider fix
     public Users createUser(Users user) {
         dsl.insertInto(DSL.table("USERS"), DSL.field("NAME"), DSL.field("EMAIL"), DSL.field("ENCODEDPASSWORD"))
                 .values(user.getName(), user.getEmail(), user.getEncodedPassword()).execute();
         return dsl.select(DSL.field("NAME"), DSL.field("EMAIL"), DSL.field("ENCODEDPASSWORD"))
                 .from(DSL.table("USERS"))
                 .where(DSL.field("USERS.EMAIL").eq(user.getEmail()))
+                .fetchAny()
+                .into(Users.class);
+    }
+
+    //TODO:Handle no data scenario well
+    public Users getUserByEmail(String email) {
+        return dsl.select(DSL.field("NAME"), DSL.field("EMAIL"), DSL.field("ENCODEDPASSWORD"))
+                .from(DSL.table("USERS"))
+                .where(DSL.field("USERS.EMAIL").eq(email))
                 .fetchAny()
                 .into(Users.class);
     }
