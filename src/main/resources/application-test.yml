@@ -3,7 +3,8 @@ spring:
   profiles: test
 
   datasource:
-    url: jdbc:postgresql://localhost:7654/spicinemas_test
+#    url: jdbc:postgresql://localhost:7654/spicinemas_test
+    url: jdbc:postgresql://23.22.163.230:5432/spicinemas_test
     username: spiuser
     password: spiuser
 
