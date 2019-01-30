@@ -26,7 +26,12 @@ public class MovieController {
     @RequestMapping(value = "/movies/now-showing",
             method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Movie> getNowShowingMovies() {
-        return movieRepo.getNowShowingMovies();
+        return movieRepo.getMoviesFilteredOnListingType(MovieListingType.NOW_SHOWING);
     }
 
+    @RequestMapping(value = "/movies/upcoming",
+            method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Movie> getMoviesFilteredOnListingType() {
+        return movieRepo.getMoviesFilteredOnListingType(MovieListingType.UPCOMING);
+    }
 }

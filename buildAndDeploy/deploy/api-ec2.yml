@@ -57,7 +57,7 @@ Resources:
               cd /home/ec2-user
               mkdir -p app
               cd app
-              wget https://s3.ap-south-1.amazonaws.com/build-artefacts-${tagName}/bootcamp-just-cinemas-api-${commitHashOfDeployable}.tar
+              wget https://s3.amazonaws.com/build-artefacts-${tagName}/bootcamp-just-cinemas-api-${commitHashOfDeployable}.tar
               tar -xzvf bootcamp-just-cinemas-api-${commitHashOfDeployable}.tar
               /usr/local/bin/docker-compose up --build -d
 
