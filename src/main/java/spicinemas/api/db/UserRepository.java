@@ -22,7 +22,7 @@ public class UserRepository {
         return dsl.select(DSL.field("NAME"), DSL.field("EMAIL"), DSL.field("ENCODEDPASSWORD"))
                 .from(DSL.table("USERS"))
                 .where(DSL.field("USERS.EMAIL").eq(user.getEmail()))
-                .fetchOne()
+                .fetchAny()
                 .into(Users.class);
     }
 
