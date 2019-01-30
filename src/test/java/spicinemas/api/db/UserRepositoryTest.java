@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import spicinemas.SpiCinemasApplication;
-import spicinemas.api.model.Users;
+import spicinemas.api.model.User;
 
 
 @RunWith(SpringRunner.class)
@@ -20,16 +20,16 @@ public class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-    Users user;
+    User user;
 
     @Before
     public void init() {
-        user = new Users("Alice","alice@example.com", "password");
+        user = new User("Alice","alice@example.com", "password");
     }
 
     @Test
     public void createUserTest() {
-       Users createdUser = userRepository.createUser(user);
+       User createdUser = userRepository.createUser(user);
       Assert.assertEquals("Alice", createdUser.getName());
     }
 }

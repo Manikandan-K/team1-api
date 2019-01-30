@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import spicinemas.api.db.UserRepository;
-import spicinemas.api.model.Users;
+import spicinemas.api.model.User;
 import spicinemas.api.service.UserService;
 import spicinemas.api.to.UserTO;
 
@@ -52,21 +52,21 @@ public class UserController {
             response = new ResponseEntity<List<Error>>(errors, HttpStatus.BAD_REQUEST);
         }
         else{
-            Users user = getModelFromTo(userTo);
-            Users createdUser= userRepository.createUser(user);
-            response = new ResponseEntity<Users>(createdUser, HttpStatus.CREATED);
+            User user = getModelFromTo(userTo);
+            User createdUser= userRepository.createUser(user);
+            response = new ResponseEntity<User>(createdUser, HttpStatus.CREATED);
         }
         }
         catch(Exception e){
-            return new ResponseEntity<Users>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
     }
 
-    public Users getModelFromTo(UserTO userTo){
+    public User getModelFromTo(UserTO userTo){
         String email =userTo.getEmail();
         String name = userTo.getName();
         String encodedPassword = passwordEncoder.encode(userTo.getPassword());
-        return new Users(email,name,encodedPassword);
+        return new User(email,name,encodedPassword);
     }
 }
