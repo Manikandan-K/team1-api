@@ -9,6 +9,7 @@ public class Movie {
     private String experiences;
     private MovieListingType listingType;
 
+
     public Movie(String name, String experiences, MovieListingType listingType) {
         this.name = name;
         this.experiences = experiences;

@@ -34,4 +34,6 @@ public class MovieController {
     public List<Movie> getMoviesFilteredOnListingType() {
         return movieRepo.getMoviesFilteredOnListingType(MovieListingType.UPCOMING);
     }
+
+
 }
