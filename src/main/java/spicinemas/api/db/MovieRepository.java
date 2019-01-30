@@ -27,7 +27,7 @@ public class MovieRepository {
         return dsl.select(DSL.field("NAME"), DSL.field("EXPERIENCES"), DSL.field("LISTING_TYPE"))
                 .from(DSL.table("MOVIE"))
                 .where(DSL.field("MOVIE.NAME").eq(name))
-                .fetchOne()
+                .fetchAny()
                 .into(Movie.class);
     }
 
