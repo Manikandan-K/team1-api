@@ -34,14 +34,21 @@ public class MovieRepository {
 				.orderBy(DSL.field("MOVIE.NAME")).fetchInto(Movie.class);
 
 	}
+	
+	public void addMovieShowTime(MovieShowTime movieShowTime) {
+		dsl.insertInto(DSL.table("MOVIE_SHOWTIMES"), DSL.field("MOVIE_ID"), DSL.field("MOVIE_TIME"), DSL.field("MOVIE_DATE"))
+				.values(movieShowTime.getMovieId(), movieShowTime.getMovieTime(), movieShowTime.getMovieDate().toString()).execute();
 
-	public List<MovieShowTime> getMoviesWithShowTime() {
+	}
+
+	public List<MovieShowTime> getMovieShowTimeForName(String movieName) {
 		return dsl
-				.select(DSL.field("MOVIE.ID").as("id"), DSL.field("MOVIE.NAME").as("name"),
+				.select(DSL.field("MOVIE.ID").as("movieId"), DSL.field("MOVIE.NAME").as("name"),
 						DSL.field("MOVIE.EXPERIENCES").as("experiences"),
 						DSL.field("MOVIE_SHOWTIMES.MOVIE_DATE").as("movieDate"),
 						DSL.field("MOVIE_SHOWTIMES.MOVIE_TIME").as("movieTime"))
 				.from(DSL.table("MOVIE")).join(DSL.table("MOVIE_SHOWTIMES"))
-				.on(DSL.field("MOVIE_SHOWTIMES.MOVIE_ID").eq(DSL.field("MOVIE.ID"))).fetchInto(MovieShowTime.class);
+				.on(DSL.field("MOVIE_SHOWTIMES.MOVIE_ID").eq(DSL.field("MOVIE.ID")))
+				.and(DSL.field("MOVIE.NAME").eq(movieName)).fetchInto(MovieShowTime.class);
 	}
 }
