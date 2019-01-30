@@ -1,15 +1,17 @@
 package spicinemas.api.controller;
 
-import spicinemas.api.db.MovieRepository;
-import spicinemas.api.model.Movie;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import spicinemas.api.type.MovieListingType;
 
-import java.util.List;
+import spicinemas.api.db.MovieRepository;
+import spicinemas.api.model.Movie;
+import spicinemas.api.model.MovieShowTime;
+import spicinemas.api.type.MovieListingType;
 
 @RestController
 public class MovieController {
@@ -34,6 +36,13 @@ public class MovieController {
     public List<Movie> getMoviesFilteredOnListingType() {
         return movieRepo.getMoviesFilteredOnListingType(MovieListingType.UPCOMING);
     }
+    
+    @RequestMapping(value = "/movies/showtimes",
+            method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<MovieShowTime> getMoviesShowTimes() {
+        return movieRepo.getMoviesWithShowTime();
+    }
+
 
 
 }
