@@ -1,5 +1,6 @@
 package spicinemas.api.controller;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +36,10 @@ public class UserControllerTest {
         user.setConfirmedPassword("abc");
         userController.handleCreateUsers(user);
         verify(userRepoMock,times(1)).createUser(any(User.class));
+    }
+
+    @Test
+    public void shouldNotDoAnything() {
+        Assert.assertEquals(true, true);
     }
 }
