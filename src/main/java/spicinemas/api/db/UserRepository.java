@@ -25,8 +25,4 @@ public class UserRepository {
                 .fetchAny()
                 .into(Users.class);
     }
-
-
-
-
 }
