@@ -11,37 +11,37 @@ import org.springframework.test.context.junit4.SpringRunner;
 import spicinemas.SpiCinemasApplication;
 import spicinemas.api.model.User;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SpiCinemasApplication.class)
 @ActiveProfiles("test")
 public class UserRepositoryTest {
 
-    @Autowired
-    UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    User user;
+	private User user;
 
-    @Before
-    public void init() {
-        user = new User("Alice","alice@example.com", "password");
-    }
+	@Before
+	public void init() {
+		user = new User("Alice", "alice@example.com", "password");
+	}
 
-    @Test
-    public void createUserTest() {
-       User createdUser = userRepository.createUser(user);
-      Assert.assertEquals("Alice", createdUser.getName());
-    }
+	@Test
+	public void createUserTest() {
+		User createdUser = userRepository.createUser(user);
+		Assert.assertEquals("Alice", createdUser.getName());
+	}
 
-    @Test
-    public void getUserByEmailShouldReturnMeUserObject() {
-        User user = userRepository.getUserByEmail("alice@example.com");
-        Assert.assertNotNull(user);
-    }
+	@Test
+	public void getUserByEmailShouldReturnMeUserObject() {
+		userRepository.createUser(user);
+		User user = userRepository.getUserByEmail("alice@example.com");
+		Assert.assertNotNull(user);
+	}
 
-    @Test(expected = Exception.class)
-    public void getUserByEmailShouldThrowExceptionWhenEmailNotFound() {
-        User user = userRepository.getUserByEmail("fdakjfadjfk@kgadjkf.com");
-    }
+	@Test(expected = Exception.class)
+	public void getUserByEmailShouldThrowExceptionWhenEmailNotFound() {
+		userRepository.getUserByEmail("fdakjfadjfk@kgadjkf.com");
+	}
 
 }
