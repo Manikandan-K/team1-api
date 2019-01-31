@@ -1,37 +1,54 @@
 package spicinemas.api.controller;
 
-import spicinemas.api.db.MovieRepository;
-import spicinemas.api.model.Movie;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import spicinemas.api.type.MovieListingType;
-
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import spicinemas.api.db.MovieDetailsRepository;
+import spicinemas.api.db.MovieRepository;
+import spicinemas.api.model.Movie;
+import spicinemas.api.model.MovieDetails;
+import spicinemas.api.type.MovieListingType;
+
 @RestController
+@RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class MovieController {
-    @Autowired
-    MovieRepository movieRepo;
 
-    @RequestMapping(value = "/init",
-            method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void init() {
+	@Autowired
+	private MovieRepository movieRepo;
 
-        movieRepo.addMovie(new Movie("Dunkirk", "good", MovieListingType.NOW_SHOWING));
-    }
+	@Autowired
+	private MovieDetailsRepository movieDetailsRepo;
 
-    @RequestMapping(value = "/movies/now-showing",
-            method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Movie> getNowShowingMovies() {
-        return movieRepo.getMoviesFilteredOnListingType(MovieListingType.NOW_SHOWING);
-    }
+	@GetMapping(value = "/init")
+	public void init() {
 
-    @RequestMapping(value = "/movies/upcoming",
-            method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Movie> getMoviesFilteredOnListingType() {
-        return movieRepo.getMoviesFilteredOnListingType(MovieListingType.UPCOMING);
-    }
+		movieRepo.addMovie(new Movie("Dunkirk", "good", MovieListingType.NOW_SHOWING));
+	}
+
+	@GetMapping(value = "/movies/now-showing")
+	public List<Movie> getNowShowingMovies() {
+		return movieRepo.getMoviesFilteredOnListingType(MovieListingType.NOW_SHOWING);
+	}
+
+	@GetMapping(value = "/movies/upcoming")
+	public List<Movie> getMoviesFilteredOnListingType() {
+		return movieRepo.getMoviesFilteredOnListingType(MovieListingType.UPCOMING);
+	}
+
+	@GetMapping(value = "/movies/details/{movie-name}")
+	public ResponseEntity<?> getMovieDetails(@PathVariable("movie-name") String movieName) {
+		List<MovieDetails> movieDetails = movieDetailsRepo.getMovieDetails(movieName);
+		if (movieDetails == null || movieDetails.isEmpty()) {
+			return new ResponseEntity<Error>(new Error("Movie details not found"), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<MovieDetails>(movieDetails.get(0), HttpStatus.OK);
+	}
 }
