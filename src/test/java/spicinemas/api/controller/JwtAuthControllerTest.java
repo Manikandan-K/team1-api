@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import spicinemas.api.db.UserRepository;
-import spicinemas.api.model.Users;
+import spicinemas.api.model.User;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -33,7 +33,7 @@ public class JwtAuthControllerTest {
 
     @Test
     public void loginShouldCallGetUserByEmailOfUserRepository(){
-        Users user=new Users("","alice@gmail.com","password");
+        User user=new User("","alice@gmail.com","password");
         controller.login(user);
 
         verify(userRepository,times(1)).getUserByEmail("alice@gmail.com");
@@ -44,10 +44,10 @@ public class JwtAuthControllerTest {
     public void loginShouldReturnUnauthorizedWhenPasswordIsIncorrect(){
         String salt=BCrypt.gensalt();
         String hash= BCrypt.hashpw("abcd",salt);
-        Users mockUser=new Users("","alice@gmail.com",hash);
+        User mockUser=new User("","alice@gmail.com",hash);
         when(userRepository.getUserByEmail(anyString())).thenReturn(mockUser);
 
-        Users user=new Users("","alice@gmail.com","password");
+        User user=new User("","alice@gmail.com","password");
         ResponseEntity res=controller.login(user);
 
         Assert.assertEquals(HttpStatus.UNAUTHORIZED,res.getStatusCode());
@@ -57,10 +57,10 @@ public class JwtAuthControllerTest {
     public void loginShouldReturnOKWhenPasswordIsCorrect(){
         String salt=BCrypt.gensalt();
         String hash= BCrypt.hashpw("abcd",salt);
-        Users mockUser=new Users("","alice@gmail.com",hash);
+        User mockUser=new User("","alice@gmail.com",hash);
         when(userRepository.getUserByEmail(anyString())).thenReturn(mockUser);
 
-        Users user=new Users("","alice@gmail.com","abcd");
+        User user=new User("","alice@gmail.com","abcd");
         ResponseEntity res=controller.login(user);
 
         Assert.assertEquals(HttpStatus.OK,res.getStatusCode());
@@ -71,7 +71,7 @@ public class JwtAuthControllerTest {
     public void loginShouldReturnInternalServererrorWhenThereIsException(){
         when(userRepository.getUserByEmail(anyString())).thenThrow(new RuntimeException());
 
-        Users user=new Users("","alice@gmail.com","abcd");
+        User user=new User("","alice@gmail.com","abcd");
         ResponseEntity res=controller.login(user);
 
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,res.getStatusCode());

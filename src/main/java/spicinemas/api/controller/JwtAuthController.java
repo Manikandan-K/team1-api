@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import spicinemas.api.db.UserRepository;
+import spicinemas.api.model.User;
 import spicinemas.api.model.UserViewModel;
-import spicinemas.api.model.Users;
 
 import java.security.Key;
 
@@ -25,7 +25,7 @@ public class JwtAuthController {
 
     @RequestMapping(value = "/login",
             method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity login(Users user){
+    public ResponseEntity login(User user){
         try {
            return authenticate(user);
         }
@@ -34,20 +34,20 @@ public class JwtAuthController {
         }
     }
 
-    private ResponseEntity authenticate(Users user){
-        Users dbUser = userRepository.getUserByEmail(user.getEmail());
+    private ResponseEntity authenticate(User user){
+        User dbUser = userRepository.getUserByEmail(user.getEmail());
         //TODO: find an appropriate status code
         return BCrypt.checkpw(user.getEncodedPassword(), dbUser.getEncodedPassword()) ?
                 new ResponseEntity(prepareResponse(user), HttpStatus.OK) :
                 new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
-    private UserViewModel prepareResponse(Users user){
+    private UserViewModel prepareResponse(User user){
         String token= generateToken(user);
         return new UserViewModel(user.getName(),user.getEmail(),token);
     }
 
-    private String generateToken(Users user) {
+    private String generateToken(User user) {
         Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         return  Jwts.builder().setSubject(user.getEmail())
                 .signWith(key).compact();

@@ -1,8 +1,8 @@
 package spicinemas.api.model;
 
-public class Users {
+public class User {
 
-    public Users(String name, String email, String encodedPassword) {
+    public User(String name, String email, String encodedPassword) {
         this.name = name;
         this.email = email;
         this.encodedPassword = encodedPassword;

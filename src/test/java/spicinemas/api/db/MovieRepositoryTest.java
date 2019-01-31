@@ -28,7 +28,7 @@ public class MovieRepositoryTest {
 
 
     @Test
-    public void shouldInsertUserInDb(){
+    public void InsertUserInDb(){
         String movieName = "Infinity War";
         Movie expectedMovie = new Movie(movieName, "okay", MovieListingType.NOW_SHOWING);
         movieRepo.addMovie(expectedMovie);
