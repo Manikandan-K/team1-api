@@ -3,7 +3,6 @@ package spicinemas.api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +16,6 @@ import spicinemas.api.db.MovieRepository;
 import spicinemas.api.model.Movie;
 import spicinemas.api.model.MovieDetails;
 import spicinemas.api.type.MovieListingType;
-
-import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

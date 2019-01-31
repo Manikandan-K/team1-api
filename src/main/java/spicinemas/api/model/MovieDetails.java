@@ -3,7 +3,6 @@ package spicinemas.api.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import spicinemas.api.type.Grade;
 import spicinemas.api.type.MovieListingType;
 
 @Getter
@@ -18,6 +17,6 @@ public class MovieDetails {
 	private String synopsis;
 	private String language;
 	private String genre;
-	private Grade grade;
+	private String grade;
 	private MovieListingType listingType;
 }
