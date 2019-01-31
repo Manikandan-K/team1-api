@@ -24,7 +24,7 @@ public class MovieDetailsRepositoryTest {
 
     @Test
     public void shouldGetOneMovieDetailForMovieName() {
-        List<MovieDetails> details = movieDetailsRepo.getMovieDetails("Kabali");
+        List<MovieDetails> details = movieDetailsRepo.getMovieDetails(1);
         Assert.assertNotNull(details);
         Assert.assertEquals(1, details.size());
         Assert.assertEquals("Kabali", details.get(0).getName());

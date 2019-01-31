@@ -61,14 +61,14 @@ public class MovieControllerTest {
 
     @Test
     public void shouldCallGetMovieDetails() {
-        mc.getMovieDetails("Kabali");
-        verify(detailRepoMock,times(1)).getMovieDetails(any(String.class));
+        mc.getMovieDetails(1);
+        verify(detailRepoMock,times(1)).getMovieDetails(any(Integer.class));
     }
 
     @Test
     public void shouldReturnErrorIfMovieDetailsNotFound() {
-        Mockito.when(detailRepoMock.getMovieDetails(Mockito.anyString())).thenReturn(Mockito.anyList());
-        ResponseEntity<?> movieDetailsResponse=  mc.getMovieDetails("Kabali");
+        Mockito.when(detailRepoMock.getMovieDetails(Mockito.anyInt())).thenReturn(Mockito.anyList());
+        ResponseEntity<?> movieDetailsResponse=  mc.getMovieDetails(1);
         Assert.assertTrue(movieDetailsResponse.getBody() instanceof  Error);
     }
 
@@ -78,8 +78,8 @@ public class MovieControllerTest {
         MovieDetails movieDetails = new MovieDetails();
         movieDetails.setName("Kabali");
         movieList.add(movieDetails);
-        Mockito.when(detailRepoMock.getMovieDetails(Mockito.anyString())).thenReturn(movieList);
-        ResponseEntity<?> movieDetailsResponse=  mc.getMovieDetails("Kabali");
+        Mockito.when(detailRepoMock.getMovieDetails(Mockito.anyInt())).thenReturn(movieList);
+        ResponseEntity<?> movieDetailsResponse=  mc.getMovieDetails(1);
         Assert.assertEquals("Kabali", ((MovieDetails)movieDetailsResponse.getBody()).getName());
     }
 

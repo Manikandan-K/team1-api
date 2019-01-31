@@ -3,6 +3,7 @@ package spicinemas.api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ import spicinemas.api.db.MovieRepository;
 import spicinemas.api.model.Movie;
 import spicinemas.api.model.MovieDetails;
 import spicinemas.api.type.MovieListingType;
+
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -43,9 +46,9 @@ public class MovieController {
 		return movieRepo.getMoviesFilteredOnListingType(MovieListingType.UPCOMING);
 	}
 
-	@GetMapping(value = "/movies/details/{movie-name}")
-	public ResponseEntity<?> getMovieDetails(@PathVariable("movie-name") String movieName) {
-		List<MovieDetails> movieDetails = movieDetailsRepo.getMovieDetails(movieName);
+	@GetMapping(value = "/movies/details/{movie-id}")
+	public ResponseEntity<?> getMovieDetails(@PathVariable("movie-id") Integer id) {
+		List<MovieDetails> movieDetails = movieDetailsRepo.getMovieDetails(id);
 		if (movieDetails == null || movieDetails.isEmpty()) {
 			return new ResponseEntity<Error>(new Error("Movie details not found"), HttpStatus.BAD_REQUEST);
 		}
