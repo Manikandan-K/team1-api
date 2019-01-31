@@ -7,15 +7,13 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import spicinemas.api.db.MovieDetailsRepository;
 import spicinemas.api.db.MovieRepository;
 import spicinemas.api.model.Movie;
 import spicinemas.api.model.MovieDetails;
+import spicinemas.api.model.MovieShowTime;
 import spicinemas.api.type.MovieListingType;
 
 import javax.validation.constraints.NotNull;
@@ -53,5 +51,9 @@ public class MovieController {
 			return new ResponseEntity<Error>(new Error("Movie details not found"), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<MovieDetails>(movieDetails.get(0), HttpStatus.OK);
+	}
+	@RequestMapping(value = "/movies/showtimes/{movieId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<MovieShowTime> getMoviesShowTimes(@PathVariable("movieId") Integer movieId) {
+		return movieRepo.getMovieShowTimeByMovieId(movieId);
 	}
 }

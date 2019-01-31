@@ -83,6 +83,12 @@ public class MovieControllerTest {
         Assert.assertEquals("Kabali", ((MovieDetails)movieDetailsResponse.getBody()).getName());
     }
 
+    @Test
+    public void shouldCallShowtimes() {
+        mc.getMoviesShowTimes(any(Integer.class));
+        verify(repoMock,times(1)).getMovieShowTimeByMovieId(any(Integer.class));
+    }
+
     @After
     public void tearDown(){
         mc=null;

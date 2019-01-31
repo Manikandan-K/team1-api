@@ -1,11 +1,13 @@
 package spicinemas.api.db;
 
 import org.jooq.DSLContext;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import spicinemas.api.model.Movie;
+import spicinemas.api.model.MovieShowTime;
 import spicinemas.api.type.MovieListingType;
 
 import java.util.List;
@@ -39,4 +41,41 @@ public class MovieRepository {
                 .fetchInto(Movie.class);
 
     }
+    public Movie getMovieById(int movieId) {
+        return dsl.select(DSL.field("ID"),DSL.field("NAME"), DSL.field("EXPERIENCES"), DSL.field("LISTING_TYPE"))
+                .from(DSL.table("MOVIE"))
+                .where(DSL.field("MOVIE.ID").eq(movieId))
+                .fetchAny()
+                .into(Movie.class);
+    }
+
+    public int getLastInsertedMovieIdByName(String movieName){
+        Results many = dsl.select(DSL.field("ID"), DSL.field("NAME"), DSL.field("EXPERIENCES"), DSL.field("LISTING_TYPE"))
+                .from(DSL.table("MOVIE"))
+                .where(DSL.field("MOVIE.NAME").eq(movieName))
+                .orderBy(DSL.field("MOVIE.ID"))
+                .fetchMany();
+        Result<Record> recordResult = many.get(many.size() - 1);
+        String myfield = recordResult.get(recordResult.size()-1).getValue(0).toString();
+
+        return Integer.parseInt(myfield);
+    }
+
+    public void addMovieShowTime(MovieShowTime movieShowTime) {
+        dsl.insertInto(DSL.table("MOVIE_SHOWTIMES"), DSL.field("MOVIE_ID"), DSL.field("MOVIE_TIME"), DSL.field("MOVIE_DATE"))
+                .values(movieShowTime.getMovieId(), movieShowTime.getMovieTime(), movieShowTime.getMovieDate()).execute();
+
+    }
+
+    public List<MovieShowTime> getMovieShowTimeByMovieId(int movieId) {
+        return dsl
+                .select(DSL.field("MOVIE.ID").as("movieId"), DSL.field("MOVIE.NAME").as("name"),
+                        DSL.field("MOVIE.EXPERIENCES").as("experiences"),
+                        DSL.field("MOVIE_SHOWTIMES.MOVIE_DATE").as("movieDate"),
+                        DSL.field("MOVIE_SHOWTIMES.MOVIE_TIME").as("movieTime"))
+                .from(DSL.table("MOVIE")).join(DSL.table("MOVIE_SHOWTIMES"))
+                .on(DSL.field("MOVIE_SHOWTIMES.MOVIE_ID").eq(DSL.field("MOVIE.ID")))
+                .and(DSL.field("MOVIE.ID").eq(movieId)).fetchInto(MovieShowTime.class);
+    }
+
 }
