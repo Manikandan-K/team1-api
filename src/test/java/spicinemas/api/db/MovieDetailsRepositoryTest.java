@@ -10,6 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import spicinemas.SpiCinemasApplication;
+import spicinemas.api.model.MovieDetails;
+
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SpiCinemasApplication.class)
@@ -19,11 +22,11 @@ public class MovieDetailsRepositoryTest {
     @Autowired
     private MovieDetailsRepository movieDetailsRepo;
 
-    @Autowired
-    DSLContext dslContext;
-
     @Test
-    public void test(){
-        Assert.assertTrue(true);
+    public void shouldGetOneMovieDetailForMovieName() {
+        List<MovieDetails> details = movieDetailsRepo.getMovieDetails("Kabali");
+        Assert.assertNotNull(details);
+        Assert.assertEquals(1, details.size());
+        Assert.assertEquals("Kabali", details.get(0).getName());
     }
 }
