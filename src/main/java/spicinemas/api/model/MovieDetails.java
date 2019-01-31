@@ -13,7 +13,7 @@ public class MovieDetails {
 	private Long id;
 	private String name;
 	private String crew;
-	private String cast;
+	private String moviecast;
 	private String duration;
 	private String synopsis;
 	private String language;
