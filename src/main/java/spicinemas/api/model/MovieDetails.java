@@ -19,4 +19,5 @@ public class MovieDetails {
 	private String genre;
 	private String grade;
 	private MovieListingType listingType;
+	private String trailer;
 }
