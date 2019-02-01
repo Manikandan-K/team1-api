@@ -46,19 +46,19 @@ public class MovieRepositoryTest {
 
     @Test
     public void shouldGetMovieShowTime() {
-        String movieName = "caption";
-        Movie expectedMovie = new Movie(movieName, "okay", MovieListingType.NOW_SHOWING);
-        movieRepo.addMovie(expectedMovie);
+        String movieName = "Kabali";
+        Movie movie = new Movie(movieName, "okay", MovieListingType.NOW_SHOWING);
+        movieRepo.addMovie(movie);
 
         Integer movieId = movieRepo.getLastInsertedMovieIdByName(movieName);
         Movie actualMovie = movieRepo.getMovieById(movieId);
 
         MovieShowTime movieShowtime = new MovieShowTime(actualMovie.getId(), actualMovie.getName(),
-                actualMovie.getExperiences(), new Date(2019, 01, 30), new Time(11, 0, 0));
+                actualMovie.getExperiences(), new Date(2019, 01, 30), new Time(11, 0, 0), "SATHYAM STUDIOS",
+                "SCREEN-5", 100, 0);
         movieRepo.addMovieShowTime(movieShowtime);
 
         List<MovieShowTime> movieShowTimes = movieRepo.getMovieShowTimeByMovieId(movieId);
-        Assert.assertEquals(1, movieShowTimes.size());
+        Assert.assertNotNull(movieShowTimes);
     }
-
 }

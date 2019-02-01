@@ -68,14 +68,23 @@ public class MovieRepository {
     }
 
     public List<MovieShowTime> getMovieShowTimeByMovieId(int movieId) {
-        return dsl
-                .select(DSL.field("MOVIE.ID").as("movieId"), DSL.field("MOVIE.NAME").as("name"),
-                        DSL.field("MOVIE.EXPERIENCES").as("experiences"),
-                        DSL.field("MOVIE_SHOWTIMES.MOVIE_DATE").as("movieDate"),
-                        DSL.field("MOVIE_SHOWTIMES.MOVIE_TIME").as("movieTime"))
-                .from(DSL.table("MOVIE")).join(DSL.table("MOVIE_SHOWTIMES"))
-                .on(DSL.field("MOVIE_SHOWTIMES.MOVIE_ID").eq(DSL.field("MOVIE.ID")))
-                .and(DSL.field("MOVIE.ID").eq(movieId)).fetchInto(MovieShowTime.class);
+        List<MovieShowTime> movieShowTimes = dsl.select(DSL.field("MOVIE.ID").as("movieId"), DSL.field("MOVIE.NAME").as("name"),
+                DSL.field("MOVIE_SHOWTIMES.ID").as("id"),
+                DSL.field("MOVIE.EXPERIENCES").as("experiences"),
+                DSL.field("MOVIE_SHOWTIMES.MOVIE_DATE").as("movieDate"),
+                DSL.field("MOVIE_SHOWTIMES.MOVIE_TIME").as("movieTime"),
+                DSL.field("MOVIE_THEATRE.THEATRE_NAME").as("cinema"),
+                DSL.field("MOVIE_THEATRE.SCREEN_NAME").as("screen"),
+                DSL.field("MOVIE_THEATRE.TICKETS_COUNT").as("count"),
+                DSL.field("MOVIE_THEATRE.TICKETS_SOLD").as("booked"))
+                .from(DSL.table("MOVIE"))
+                        .join(DSL.table("MOVIE_SHOWTIMES"))
+                        .on(DSL.field("MOVIE_SHOWTIMES.MOVIE_ID").eq(DSL.field("MOVIE.ID")))
+                        .and(DSL.field("MOVIE.ID").eq(movieId))
+                        .join(DSL.table("MOVIE_THEATRE"))
+                        .on(DSL.field("MOVIE_THEATRE.MOVIE_SHOWTIME_ID").eq(DSL.field("MOVIE_SHOWTIMES.ID")))
+                .fetchInto(MovieShowTime.class);
+        return movieShowTimes;
     }
 
 }
