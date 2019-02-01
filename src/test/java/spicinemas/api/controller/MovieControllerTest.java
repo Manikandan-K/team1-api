@@ -89,11 +89,7 @@ public class MovieControllerTest {
         verify(repoMock,times(1)).getMovieShowTimeByMovieId(any(Integer.class));
     }
 
-    @Test
-    public void shouldReturnTicketBookingStatus() {
-        mc.getTicketBookingStatus(any(Integer.class));
-        verify(repoMock,times(1)).bookMovie(any(Integer.class), any(Integer.class));
-    }
+
     @After
     public void tearDown(){
         mc=null;

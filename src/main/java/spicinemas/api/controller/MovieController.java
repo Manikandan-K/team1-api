@@ -64,14 +64,11 @@ public class MovieController {
 
 	@PostMapping(value = "/movies/booking")
 	public ResponseEntity<?> getTicketBookingStatus(@RequestBody BookingDetails details) {
-		Integer showtimeId = 
-		if (movieRepo.getMovieShowTimeByShowtimeId(showtimeId).size() == 0) {
-			return new ResponseEntity<Error>(new Error("Unable to create booking. Invalid Showtimes"),
-					HttpStatus.BAD_REQUEST);
+		Integer ticketAvailable = movieRepo.getTicketsAvailable(details);
+		if(ticketAvailable == 0 || ticketAvailable < details.getNumberOfTckts()){
+			return new ResponseEntity<Error>(new Error("No Seats Avaialble"), HttpStatus.BAD_REQUEST);
 		}
-		movieRepo.bookMovie(showtimeId, details);
-		/// create response from the above call.
-		HttpHeaders headers = new HttpHeaders();
-		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+		String bookingId = movieRepo.bookMovie(details, ticketAvailable);
+		return new ResponseEntity<String>(bookingId, HttpStatus.CREATED);
 	}
 }

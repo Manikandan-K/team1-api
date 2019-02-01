@@ -53,9 +53,9 @@ public class MovieRepositoryTest {
         Integer movieId = movieRepo.getLastInsertedMovieIdByName(movieName);
         Movie actualMovie = movieRepo.getMovieById(movieId);
 
-        MovieShowTime movieShowtime = new MovieShowTime(actualMovie.getId(), actualMovie.getName(),
+        MovieShowTime movieShowtime = new MovieShowTime(0l, actualMovie.getId(), actualMovie.getName(),
                 actualMovie.getExperiences(), new Date(2019, 01, 30), new Time(11, 0, 0), "SATHYAM STUDIOS",
-                "SCREEN-5", 100, 0);
+                "SCREEN-5", 100, 0, 0l);
         movieRepo.addMovieShowTime(movieShowtime);
 
         List<MovieShowTime> movieShowTimes = movieRepo.getMovieShowTimeByMovieId(movieId);

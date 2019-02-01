@@ -1,6 +1,7 @@
 package spicinemas.api.db;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -11,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import spicinemas.api.model.BookingDetails;
 import spicinemas.api.model.Movie;
 import spicinemas.api.model.MovieShowTime;
+import spicinemas.api.model.User;
 import spicinemas.api.type.MovieListingType;
 
 @Repository
@@ -69,6 +72,7 @@ public class MovieRepository {
 						DSL.field("MOVIE_SHOWTIMES.MOVIE_DATE").as("movieDate"),
 						DSL.field("MOVIE_SHOWTIMES.MOVIE_TIME").as("movieTime"),
 						DSL.field("MOVIE_THEATRE.THEATRE_NAME").as("cinema"),
+                        DSL.field("MOVIE_THEATRE.ID").as("theatreId"),
 						DSL.field("MOVIE_THEATRE.SCREEN_NAME").as("screen"),
 						DSL.field("MOVIE_THEATRE.TICKETS_COUNT").as("count"),
 						DSL.field("MOVIE_THEATRE.TICKETS_SOLD").as("booked"))
@@ -79,25 +83,43 @@ public class MovieRepository {
 				.fetchInto(MovieShowTime.class);
 		return movieShowTimes;
 	}
+//
+//	public List<MovieShowTime> getMovieShowTimeByShowtimeId(long showTimeId) {
+//		List<MovieShowTime> movieShowTimes = dsl
+//				.select(DSL.field("MOVIE.ID").as("movieId"), DSL.field("MOVIE.NAME").as("name"),
+//						DSL.field("MOVIE_SHOWTIMES.ID").as("id"), DSL.field("MOVIE.EXPERIENCES").as("experiences"),
+//						DSL.field("MOVIE_SHOWTIMES.MOVIE_DATE").as("movieDate"),
+//						DSL.field("MOVIE_SHOWTIMES.MOVIE_TIME").as("movieTime"),
+//						DSL.field("MOVIE_THEATRE.THEATRE_NAME").as("cinema"),
+//						DSL.field("MOVIE_THEATRE.SCREEN_NAME").as("screen"),
+//						DSL.field("MOVIE_THEATRE.TICKETS_COUNT").as("count"),
+//						DSL.field("MOVIE_THEATRE.TICKETS_SOLD").as("booked"))
+//				.from(DSL.table("MOVIE")).join(DSL.table("MOVIE_SHOWTIMES"))
+//				.on(DSL.field("MOVIE_SHOWTIMES.MOVIE_ID").eq(DSL.field("MOVIE.ID")))
+//				.and(DSL.field("MOVIE_SHOWTIMES.ID").eq(showTimeId)).join(DSL.table("MOVIE_THEATRE"))
+//				.on(DSL.field("MOVIE_THEATRE.MOVIE_SHOWTIME_ID").eq(DSL.field("MOVIE_SHOWTIMES.ID")))
+//				.fetchInto(MovieShowTime.class);
+//		return movieShowTimes;
+//	}
 
-	public List<MovieShowTime> getMovieShowTimeByShowtimeId(long showTimeId) {
-		List<MovieShowTime> movieShowTimes = dsl
-				.select(DSL.field("MOVIE.ID").as("movieId"), DSL.field("MOVIE.NAME").as("name"),
-						DSL.field("MOVIE_SHOWTIMES.ID").as("id"), DSL.field("MOVIE.EXPERIENCES").as("experiences"),
-						DSL.field("MOVIE_SHOWTIMES.MOVIE_DATE").as("movieDate"),
-						DSL.field("MOVIE_SHOWTIMES.MOVIE_TIME").as("movieTime"),
-						DSL.field("MOVIE_THEATRE.THEATRE_NAME").as("cinema"),
-						DSL.field("MOVIE_THEATRE.SCREEN_NAME").as("screen"),
-						DSL.field("MOVIE_THEATRE.TICKETS_COUNT").as("count"),
-						DSL.field("MOVIE_THEATRE.TICKETS_SOLD").as("booked"))
-				.from(DSL.table("MOVIE")).join(DSL.table("MOVIE_SHOWTIMES"))
-				.on(DSL.field("MOVIE_SHOWTIMES.MOVIE_ID").eq(DSL.field("MOVIE.ID")))
-				.and(DSL.field("MOVIE_SHOWTIMES.ID").eq(showTimeId)).join(DSL.table("MOVIE_THEATRE"))
-				.on(DSL.field("MOVIE_THEATRE.MOVIE_SHOWTIME_ID").eq(DSL.field("MOVIE_SHOWTIMES.ID")))
-				.fetchInto(MovieShowTime.class);
-		return movieShowTimes;
+	public String bookMovie(BookingDetails bookingDetails, int ticketAvailable) {
+		String bookingId = UUID.randomUUID().toString();
+		ticketAvailable-=bookingDetails.getNumberOfTckts();
+		int ticketSold = getTicketsSold(bookingDetails.getShowtimeId(), bookingDetails.getTheatreId())+ bookingDetails.getNumberOfTckts();
+		dsl.insertInto(DSL.table("MOVIE_TICKET"), DSL.field("THREATRE_ID"), DSL.field("MOVIE_SHOWTIME_ID"), DSL.field("BOOKING_ID"), DSL.field("USER_NAME"),DSL.field("USER_EMAIL"),DSL.field("TICKET_COUNT"))
+				.values(bookingDetails.getTheatreId(), bookingDetails.getShowtimeId(), bookingId, bookingDetails.getUsername(), bookingDetails.getUseremail(), bookingDetails.getNumberOfTckts()).execute();
+		dsl.update(DSL.table("MOVIE_THEATRE")).set(DSL.field("MOVIE_THEATRE.TICKETS_SOLD"), ticketSold).set(DSL.field("MOVIE_THEATRE.TICKETS_COUNT"), ticketAvailable).execute();
+		return bookingId;
+
 	}
 
-	public void bookMovie(Integer any, Integer any1) {
+	private int getTicketsSold(Long showtimeId, Long theatreId) {
+
+		return (Integer) dsl.select(DSL.field("MOVIE_THEATRE.TICKETS_SOLD")).from(DSL.table("MOVIE_THEATRE")).where(DSL.field("MOVIE_THEATRE.ID").eq(theatreId).and(DSL.field("MOVIE_THEATRE.MOVIE_SHOWTIME_ID").eq(showtimeId))).fetch().get(0).value1();
+	}
+
+	public Integer getTicketsAvailable(BookingDetails bookingDetails) {
+		return (Integer) dsl.select(DSL.field("MOVIE_THEATRE.TICKETS_COUNT")).from(DSL.table("MOVIE_THEATRE")).where(DSL.field("MOVIE_THEATRE.ID").eq(bookingDetails.getTheatreId()).and(DSL.field("MOVIE_THEATRE.MOVIE_SHOWTIME_ID").eq(bookingDetails.getShowtimeId()))).fetch().get(0).value1();
+
 	}
 }
