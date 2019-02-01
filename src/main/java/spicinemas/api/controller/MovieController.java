@@ -3,13 +3,20 @@ package spicinemas.api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import spicinemas.api.db.MovieDetailsRepository;
 import spicinemas.api.db.MovieRepository;
+import spicinemas.api.model.BookingDetails;
 import spicinemas.api.model.Movie;
 import spicinemas.api.model.MovieDetails;
 import spicinemas.api.model.MovieShowTime;
@@ -49,8 +56,22 @@ public class MovieController {
 		}
 		return new ResponseEntity<MovieDetails>(movieDetails.get(0), HttpStatus.OK);
 	}
-	@RequestMapping(value = "/movies/showtimes/{movieId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@GetMapping(value = "/movies/showtimes/{movieId}")
 	public List<MovieShowTime> getMoviesShowTimes(@PathVariable("movieId") Integer movieId) {
 		return movieRepo.getMovieShowTimeByMovieId(movieId);
+	}
+
+	@PostMapping(value = "/movies/booking")
+	public ResponseEntity<?> getTicketBookingStatus(@RequestBody BookingDetails details) {
+		Integer showtimeId = 
+		if (movieRepo.getMovieShowTimeByShowtimeId(showtimeId).size() == 0) {
+			return new ResponseEntity<Error>(new Error("Unable to create booking. Invalid Showtimes"),
+					HttpStatus.BAD_REQUEST);
+		}
+		movieRepo.bookMovie(showtimeId, details);
+		/// create response from the above call.
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}
 }
